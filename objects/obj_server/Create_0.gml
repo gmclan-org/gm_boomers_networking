@@ -14,6 +14,16 @@
 		exit;
 	}
 	
+	udp = -1;
+	if (option_try_udp) {
+		udp = network_create_server(network_socket_udp, option_udp_port, 10);
+		if (udp == -1) {
+			network_destroy(udp); // to prevent blocking port
+			show_error($"Can't create Server - port {option_udp_port} in use", true);
+			exit;
+		}
+	}
+	
 	// create database of connections
 	clients = ds_map_create(); // this is cleared in Clean Up event to avoid memory leak
 	

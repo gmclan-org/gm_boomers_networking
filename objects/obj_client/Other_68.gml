@@ -27,6 +27,11 @@
 			timeout = 0;
 			
 			switch(_command) {
+				case COMMAND_SEND_UDP_ID:
+					my_udp_id = readbyte();
+					show_debug_message($"C: got UDP id {my_udp_id}");
+				break;
+				
 				case COMMAND_PLAYERS_POS:
 					var _synced = false;
 					var _player_id = readbyte();

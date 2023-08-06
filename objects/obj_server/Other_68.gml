@@ -17,6 +17,13 @@
 			clients[? _incoming_socket] = instance_create_layer(room_width/2, room_height/2, layer, obj_server_player);
 			clients[? _incoming_socket].desc = $"Player: {_incoming_socket}";
 			clients[? _incoming_socket].socket = _incoming_socket;
+			
+			// set him his id
+			clearbuffer();
+			writebyte(COMMAND_SEND_UDP_ID);
+			writebyte(_incoming_socket);
+			sendmessage(_incoming_socket);
+			
 		} else if (_type == network_type_disconnect) {
 			// player disconnected
 			show_debug_message($"S: - client {_incoming_socket} disconnected");
@@ -51,13 +58,41 @@
 		}
 		
 		var _command = readbyte(); // get first byte, which marks our command
-		var _p = clients[? _sock]; // get player instance
+		var _p = noone;
+		
+		// in case of UDP, we're sending additional info about socket
+		var _guess_player_from_tcp = true;
+		if (option_try_udp) {
+			if (_sock == udp) {
+				_guess_player_from_tcp = false;
+				// this is UDP packet, so we won't know client socket!!!
+				var _sock_guess = readbyte();
+				show_debug_message($"S: UDP? {_sock_guess}");
+				if (ds_map_exists(clients, _sock_guess)) {
+					show_debug_message($"client found, command {_command}");
+					_p = clients[? _sock_guess];
+				} else {
+					exit; // no player found
+				}
+			}
+		}
+		
+		if (_guess_player_from_tcp) {
+			// this is TCP request
+			_p = clients[? _sock]; // get player instance
+		}
+		
+		if (_p == noone or _p == undefined) {
+			show_debug_message("S: exit");
+			exit;
+		}
 		
 		#region commands
 		switch(_command) {
 			case COMMAND_POSITION:
 				_p.destx = readshort();		
 				_p.desty = readshort();
+				show_debug_message($"pos: {_p.destx}, {_p.desty}");
 				break;
 				
 			case COMMAND_FIRE:

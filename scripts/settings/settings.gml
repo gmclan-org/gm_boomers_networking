@@ -1,5 +1,6 @@
 #macro option_ip "127.0.0.1"
 #macro option_port 14804
+#macro option_udp_port 14805
 #macro option_player_speed 4
 #macro option_sync_every_frames 5
 
@@ -7,6 +8,7 @@
 #macro COMMAND_PLAYERS_POS 2
 #macro COMMAND_FIRE 3
 #macro COMMAND_PING 4
+#macro COMMAND_SEND_UDP_ID 5
 
 randomize();
 
@@ -17,8 +19,9 @@ randomize();
 // if using more than to 2 multiclient instances and "option_auto_move_window" is true
 // it's good to have at least 2 monitors
 
-#macro option_auto_create_serv_client true // skip showing menu when mc-window-number is set
+#macro option_auto_create_serv_client false // skip showing menu when mc-window-number is set
 #macro option_auto_move_window true // set windows positions when mc-window-number is set
+#macro option_try_udp true // set to wether to send position data using UDP
 
 global.auto_select_menu = -1;
 

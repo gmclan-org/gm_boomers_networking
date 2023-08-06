@@ -27,6 +27,13 @@ function sendmessage(_socket, _buff = global.buffer) {
 	network_send_packet(_socket, _buff, buffer_tell(_buff));
 }
 
+/// @desc Sends buffer data (up to current write/read pos, not whole!) using selected socket
+/// @param {Id.Socket} _socket Socket to use to send data
+/// @param {Id.Buffer} _buff Buffer to use (only data from 0 to curr pos will be sent)
+function sendmessage_udp(_socket, _buff = global.buffer) {
+	network_send_udp(_socket, option_ip, option_udp_port, _buff, buffer_tell(_buff));
+}
+
 /// @desc Gets read/write position in buffer.
 /// @param {Id.Buffer} _buff Id of Buffer to check
 function getpos(_buff = global.buffer) {

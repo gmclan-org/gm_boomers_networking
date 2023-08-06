@@ -7,5 +7,8 @@
 	if (connect > -1) {
 		network_destroy(connect);
 	}
+	if (udp > -1) {
+		network_destroy(udp);
+	}
 	
 	scr_go_back_menu();
